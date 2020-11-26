@@ -42,7 +42,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -55,10 +55,18 @@ export default {
                 }
             })
             .catch((error) => {
+                if(error.response.status === 401){
+                    window.location.href = '/login/'
+                }
                 if (error.response) {
                     let message = ''
                     for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
+                        if(errorMessage === 'error'){
+                            message+= `${error.response.data[errorMessage]}`
+                        }
+                        else{
+                            message+= `${errorMessage}: ${error.response.data[errorMessage][0]}`
+                        }
                     }               
                     this.message = `${message}`
                 } else if (error.request) {
@@ -69,7 +77,7 @@ export default {
             })
         },
         getAlertInformation : function() {
-            axios.get('http://192.168.50.31:8000/api/v1/alerts/', {
+            axios.get('http://192.168.1.196:8000/api/v1/alerts/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -82,17 +90,7 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         }
         

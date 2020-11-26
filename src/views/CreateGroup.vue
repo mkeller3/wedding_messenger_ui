@@ -34,7 +34,7 @@
                 color="success"
                 @click="processForm"
             >
-            Create Guest
+            Create Group
             </v-btn>
           </form>
       </v-col>
@@ -57,7 +57,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -84,7 +84,7 @@ export default {
             })
         },
         getGuestsInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/guests/', {
+            axios.get('http://192.168.1.196:8000/api/v1/guests/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -97,21 +97,11 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         processForm: function() {             
-            axios.post(`http://192.168.50.31:8000/api/v1/group/`, {
+            axios.post(`http://192.168.1.196:8000/api/v1/group/`, {
                 account_id: this.accountId,
                 group_name: this.groupName,
                 guests: this.selectedGuests,
@@ -129,17 +119,7 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })       
         },
         toggleGuest: function(guest){

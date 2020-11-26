@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-text>
-            <a :href="'/update_group/' + group.id"><h4>{{group.group_name}} ({{group.guests.length}})</h4></a>
+            <a :href="'/update_group/' + group.id"><h4>{{group.group_name}} ({{group.guests.length}} Guests)</h4></a>
            <div class="guest-info" v-on:click="deleteGroup(group)"><v-icon>mdi-trash-can</v-icon>Delete Group</div>
         </v-card-text>
     </v-card>
@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         deleteGroup: function(group){
-            axios.delete(`http://192.168.50.31:8000/api/v1/group/?id=${group.id}`, {
+            axios.delete(`http://192.168.1.196:8000/api/v1/group/?id=${group.id}`, {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }

@@ -1,0 +1,7 @@
+name: frontend
+image: okteto/movies-frontend:dev
+command: npm start
+sync:
+  - .:/src
+persistentVolume:
+  enabled: false

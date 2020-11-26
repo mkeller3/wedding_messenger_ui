@@ -73,7 +73,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 }
@@ -86,21 +86,11 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getGuestInformation: function () {               
-            axios.get(`http://192.168.50.31:8000/api/v1/guest/?id=${this.$route.params.id}`,{
+            axios.get(`http://192.168.1.196:8000/api/v1/guest/?id=${this.$route.params.id}`,{
                 headers: {
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 }                
@@ -118,24 +108,14 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         processForm: function() {
             return axios.get(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?magicKey=${this.address.magicKey}&f=json&maxLocations=1`)
             .then((res) => {
                 if(res.status === 200){     
-                    axios.put('http://192.168.50.31:8000/api/v1/guest/', {
+                    axios.put('http://192.168.1.196:8000/api/v1/guest/', {
                         account_id: this.accountId,
                         first_name: this.firstName,
                         last_name: this.lastName,
@@ -164,17 +144,7 @@ export default {
                         }
                     })
                     .catch((error) => {
-                        if (error.response) {
-                            let message = ''
-                            for (let errorMessage in error.response.data){
-                                message+= error.response.data[errorMessage]
-                            }               
-                            this.message = `${message}`
-                        } else if (error.request) {
-                            this.message = `Sorry, the following error occured (${error.request}).`
-                        } else {                
-                            this.message = `Sorry, the following error occured (${error.message}).`
-                        }
+                        this.message = this.$globalFunctions.errorResponse(error)
                     })
                 }
             })
@@ -191,9 +161,8 @@ export default {
                     }
                     this.isLoading = false
                 })
-                .catch(() => {
-                    this.message = 'Sorry, we are having issues searching for addresses.'
-                    this.isLoading = false
+                .catch((error) => {
+                    this.message = this.$globalFunctions.errorResponse(error)
                 })
             }
         }

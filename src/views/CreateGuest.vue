@@ -75,7 +75,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 }
@@ -87,8 +87,8 @@ export default {
                     this.message = 'Sorry, we are having issues getting your account information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your account information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getAddress: async function(){
@@ -106,7 +106,7 @@ export default {
         },
         processForm: function() {
             let address = this.getAddress()    
-            axios.post('http://192.168.50.31:8000/api/v1/guest/', {
+            axios.post('http://192.168.1.196:8000/api/v1/guest/', {
                 account_id: this.accountId,
                 first_name: this.firstName,
                 last_name: this.lastName,
@@ -134,22 +134,7 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        if(errorMessage === 'error'){
-                            message+= `${error.response.data[errorMessage]}`
-                        }
-                        else{
-                            message+= `${errorMessage}: ${error.response.data[errorMessage][0]}`
-                        }
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
              
         }

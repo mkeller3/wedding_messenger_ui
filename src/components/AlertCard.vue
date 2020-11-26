@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         deleteAlert: function(alert){
-            axios.delete(`http://192.168.50.31:8000/api/v1/alert/?id=${alert.id}`, {
+            axios.delete(`http://192.168.1.196:8000/api/v1/alert/?id=${alert.id}`, {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }

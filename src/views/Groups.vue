@@ -42,7 +42,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -54,12 +54,12 @@ export default {
                     this.message = 'Sorry, we are having issues getting your account information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your account information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getGroupInformation : function() {
-            axios.get('http://192.168.50.31:8000/api/v1/groups/', {
+            axios.get('http://192.168.1.196:8000/api/v1/groups/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -71,8 +71,8 @@ export default {
                     this.message = 'Sorry, we are having issues getting your account information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your account information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         }
         

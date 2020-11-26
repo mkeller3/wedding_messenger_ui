@@ -42,7 +42,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 }
@@ -55,21 +55,11 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getGuestInformation : function() {
-            axios.get('http://192.168.50.31:8000/api/v1/guests/', {
+            axios.get('http://192.168.1.196:8000/api/v1/guests/', {
                 headers: {
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 }
@@ -82,17 +72,7 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         }
         

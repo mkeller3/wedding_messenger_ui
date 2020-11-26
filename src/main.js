@@ -3,7 +3,10 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
 import VueScrollReveal from 'vue-scroll-reveal';
-import DatetimePicker from 'vuetify-datetime-picker'
+import DatetimePicker from 'vuetify-datetime-picker';
+import {globalFunctions} from './globalFunctions.js'
+
+Vue.prototype.$globalFunctions = globalFunctions
 
 Vue.use(DatetimePicker);
 Vue.use(VueScrollReveal, {

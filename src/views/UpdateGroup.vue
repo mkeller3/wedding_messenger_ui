@@ -57,7 +57,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -69,12 +69,12 @@ export default {
                     this.message = 'Sorry, we are having issues getting your account information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your account information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getGuestsInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/guests/', {
+            axios.get('http://192.168.1.196:8000/api/v1/guests/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -86,12 +86,12 @@ export default {
                     this.message = 'Sorry, we are having issues getting your account information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your account information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         getGroupInformation: function () {               
-            axios.get(`http://192.168.50.31:8000/api/v1/group/?id=${this.$route.params.id}`,{
+            axios.get(`http://192.168.1.196:8000/api/v1/group/?id=${this.$route.params.id}`,{
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }                
@@ -104,12 +104,12 @@ export default {
                     this.message = 'Sorry, we are having issues getting your guest information.'                    
                 }
             })
-            .catch(() => {
-                this.message = 'Sorry, we are having issues getting your guest information.'  
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         processForm: function() {             
-            axios.put(`http://192.168.50.31:8000/api/v1/group/`, {
+            axios.put(`http://192.168.1.196:8000/api/v1/group/`, {
                 account_id: this.accountId,
                 group_name: this.groupName,
                 guests: this.selectedGuests,
@@ -127,9 +127,9 @@ export default {
                     this.message = `Sorry, we are having issues updating ${this.groupName}.`                   
                 }
             })
-            .catch(() => {
-                this.message = `Sorry, we are having issues updating ${this.groupName}.`  
-            })       
+            .catch((error) => {
+                this.message = this.$globalFunctions.errorResponse(error)
+            })      
         },
         toggleGuest: function(guest){
             if(this.selectedGuests.includes(guest)){

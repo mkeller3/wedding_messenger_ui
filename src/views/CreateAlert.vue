@@ -16,80 +16,14 @@
                 required
             ></v-select> 
             <div v-if="alertType === 'scheduled'">
-                <v-dialog
-                    ref="dialog"
-                    v-model="dateModal"
-                    :return-value.sync="alertDate"
-                    persistent
-                    width="290px"
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="alertDate"
-                        label="Date"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-date-picker
-                    v-model="alertDate"
-                    scrollable
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="dateModal = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.dialog.save(date)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-date-picker>
-                </v-dialog>
-                <v-dialog
-                    ref="dialog"
-                    v-model="timeModal"
-                    :return-value.sync="alertTime"
-                    persistent
-                    width="290px"
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="alertTime"
-                        label="Time"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-time-picker
-                    v-model="alertTime"
-                    full-width
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="timeModal = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.dialog.save(time)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-time-picker>
-                </v-dialog>
+                <v-datetime-picker label="Time" v-model="alertTime"> 
+                  <template slot="dateIcon">
+                    <v-icon>mdi-calendar</v-icon>
+                  </template>
+                  <template slot="timeIcon">
+                    <v-icon>mdi-clock</v-icon>
+                  </template> 
+                </v-datetime-picker>
             </div>
             <v-select
                 v-model="alertGroup"
@@ -144,8 +78,7 @@ export default {
             alertTypes: [
                 { text: 'Now', value: 'now'},
                 { text: 'Scheduled', value: 'scheduled'}],
-            alertDate: new Date().toISOString().slice(0,10),
-            alertTime: new Date().toTimeString().slice(0,5),
+            alertTime: `${new Date().toISOString().slice(0,10)} ${new Date().toTimeString().slice(0,5)}`,
             alertGroup: false,
             alertGroups: [
                 { text: 'Yes', value: true},
@@ -161,7 +94,7 @@ export default {
     },
     methods:{
         getAccountInformation: function() {
-            axios.get('http://192.168.50.31:8000/api/v1/account/', {
+            axios.get('http://192.168.1.196:8000/api/v1/account/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -174,27 +107,17 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         processForm: function() {            
-            axios.post('http://192.168.50.31:8000/api/v1/alert/', {
+            axios.post('http://192.168.1.196:8000/api/v1/alert/', {
                 account_id: this.accountId,
                 message: this.alertText,
                 group_message: this.alertGroup,
                 group_ids: this.selectedGroups,
                 alert_type: this.alertType,
-                run_time: `${this.alertDate}T${this.alertTime}`
+                run_time:  this.alertTime,
 
             }, {
                 headers: {
@@ -210,21 +133,11 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
-            })    
+                this.message = this.$globalFunctions.errorResponse(error)
+            })  
         },
         getGroupInformation : function() {
-            axios.get('http://192.168.50.31:8000/api/v1/groups/', {
+            axios.get('http://192.168.1.196:8000/api/v1/groups/', {
                 headers: {
                     'Authorization': `Token f43c1ce6396e91936da9a7123909d0baf53651f1` 
                 }
@@ -237,17 +150,7 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
+                this.message = this.$globalFunctions.errorResponse(error)
             })
         },
         toggleGroup: function(group){

@@ -50,14 +50,14 @@ export default {
     },
     methods:{
         processForm: function() { 
-            axios.post(`http://192.168.50.31:8000/accounts/register/`, {
+            axios.post(`http://192.168.1.196:8000/accounts/register/`, {
                 username: this.username,
                 password: this.password,
                 password_confirm: this.password
             })
             .then((res) => {
                 if (res.status === 201){
-                    axios.post(`http://192.168.50.31:8000/accounts/login/`, {
+                    axios.post(`http://192.168.1.196:8000/accounts/login/`, {
                         login: this.username,
                         password: this.password,
                     })
@@ -77,18 +77,8 @@ export default {
                 }
             })  
             .catch((error) => {
-                if (error.response) {
-                    let message = ''
-                    for (let errorMessage in error.response.data){
-                        message+= error.response.data[errorMessage][0]
-                    }               
-                    this.message = `${message}`
-                } else if (error.request) {
-                    this.message = `Sorry, the following error occured (${error.request}).`
-                } else {                
-                    this.message = `Sorry, the following error occured (${error.message}).`
-                }
-            })  
+                this.message = this.$globalFunctions.errorResponse(error)
+            })
         }
     }
 }
