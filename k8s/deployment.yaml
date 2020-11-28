@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world
+  name: wedding-messenger
 spec:
   selector:
     matchLabels:
-      app: hello-world
+      app: wedding-messenger
   replicas: 1
   template:
     metadata:
       labels:
-        app: hello-world
+        app: wedding-messenger
     spec:
       containers:
-      - name: hello-world
-        image: okteto.dev/hello-world:latest
+      - name: wedding-messenger
+        image: okteto.dev/wedding-messenger:latest
         ports:
         - containerPort: 80
